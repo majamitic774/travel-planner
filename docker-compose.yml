@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  api:
+    build: ./api
+    working_dir: /var/www/html
+    volumes:
+      - ./api:/var/www/html
+    command: >-
+      sh -c "[ -f .env ] || cp .env.example .env && \
+      composer install && \
+      php artisan key:generate --force && \
+      php -S 0.0.0.0:8000 -t public public/index.php"
+    ports:
+      - "8000:8000"
+
+  app:
+    image: node:18
+    working_dir: /usr/src/app
+    volumes:
+      - ./app:/usr/src/app
+    command: sh -c "npm install && npm run build && npm start"
+    ports:
+      - "3000:3000"

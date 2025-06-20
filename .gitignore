@@ -1,0 +1,6 @@
+node_modules
+vendor
+.env
+.git
+app/public/bundle.js
+package-lock.json
