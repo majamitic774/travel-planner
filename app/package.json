@@ -3,14 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "npx serve -s public",
+    "start": "node server.js",
     "build": "node build.js",
     "watch": "node build.js --watch",
     "test": "jest"
   },
   "dependencies": {
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^7.6.2",
+    "express": "^4.18.2",
+    "http-proxy-middleware": "^2.0.6"
   },
   "devDependencies": {
     "esbuild": "^0.19.11",
