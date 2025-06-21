@@ -7,13 +7,15 @@ This project contains two applications:
 
 ## Setup
 
-1. Build the containers so PHP dependencies are correctly installed.
+1. Copy `.env.example` to `.env` and adjust the values if required.
+
+2. Build the containers so PHP dependencies are correctly installed.
 
 ```bash
 docker compose build
 ```
 
-2. Start the containers.
+3. Start the containers.
 
 ```bash
 docker compose up -d
@@ -35,6 +37,14 @@ docker compose exec api php artisan migrate
 - Generating new migration
 ```
 docker compose exec api php artisan make:migration <migration_name>
+```
+
+## Database access
+
+Log into the MySQL container with:
+
+```bash
+docker compose exec db mysql -u "$DB_USERNAME" -p"$DB_PASSWORD" "$DB_DATABASE"
 ```
 
 ## Coding guidelines
