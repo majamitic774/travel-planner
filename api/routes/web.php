@@ -1,13 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MessageController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/message', function () {
-    $text = 'Hello from Laravel';
+Route::get('/message', [MessageController::class, 'index']);
 
-    return response()->json(['message' => $text]);
-});
+Route::post('/message', [MessageController::class, 'store']);
+
