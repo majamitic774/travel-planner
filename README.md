@@ -21,8 +21,11 @@ docker compose build
 docker compose up -d
 ```
 
+React updates are applied immediately without restarting containers.
+
 - Access the application.
    - React: http://localhost:3000
+   - Laravel API is not exposed to the host and is reachable only through the React application
 
 The ignore files exclude generated lock files and other temporary content.
 
