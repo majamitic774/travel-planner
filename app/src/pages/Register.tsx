@@ -6,8 +6,8 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (FormEvent: React.FormEvent) => {
+    FormEvent.preventDefault();
   };
 
   return (
@@ -18,28 +18,28 @@ const Register = () => {
           type='text'
           placeholder='Username'
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(FormEvent) => setUsername(FormEvent.target.value)}
           required
         />
         <input
           type='email'
           placeholder='Email'
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(FormEvent) => setEmail(FormEvent.target.value)}
           required
         />
         <input
           type='password'
           placeholder='Password'
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(FormEvent) => setPassword(FormEvent.target.value)}
           required
         />
         <input
           type='password'
           placeholder='Repeat password'
           value={repeatPassword}
-          onChange={(e) => setRepeatPassword(e.target.value)}
+          onChange={(FormEvent) => setRepeatPassword(FormEvent.target.value)}
           required
         />
         <button type='submit'>Register</button>
