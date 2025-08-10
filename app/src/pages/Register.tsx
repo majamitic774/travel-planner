@@ -6,8 +6,26 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
 
-  const handleSubmit = (formEvent: React.FormEvent): void => {
+  const handleSubmit = async (formEvent: React.FormEvent): Promise<void> => {
     formEvent.preventDefault();
+
+    try {
+      const queryParams = new URLSearchParams({
+        username,
+        email,
+        password,
+        repeatPassword,
+      });
+
+      const response = await fetch(`/api/test-connection?${queryParams}`);
+      const data = await response.json();
+
+      console.log("Response from Laravel:", data);
+      alert(`Laravel responded: ${data.message}`);
+    } catch (error) {
+      console.error("Error connecting to Laravel:", error);
+      alert("Failed to connect to Laravel");
+    }
   };
 
   return (
