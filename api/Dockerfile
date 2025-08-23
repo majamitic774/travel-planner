@@ -16,5 +16,8 @@ RUN apt-get update \
 
 WORKDIR /var/www/html
 
+# Create non-root user for security (using standard 1000:1000 to match most host users)
+RUN groupadd -g 1000 appuser && useradd -r -u 1000 -g appuser appuser
+
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
 

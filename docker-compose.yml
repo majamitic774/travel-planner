@@ -16,7 +16,9 @@ services:
       retries: 10
 
   api:
-    build: ./api
+    build: 
+      context: ./api
+    user: "1000:1000"
     working_dir: /var/www/html
     volumes:
       - ./api:/var/www/html
@@ -41,7 +43,9 @@ services:
       - "8000"
 
   app:
-    build: ./app
+    build:
+      context: ./app  
+    user: "1000:1000"
     working_dir: /usr/src/app
     environment:
       - API_ORIGIN=${API_ORIGIN}

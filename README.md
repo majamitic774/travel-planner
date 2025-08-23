@@ -50,6 +50,41 @@ Log into the MySQL container with:
 docker compose exec db mysql -u "$DB_USERNAME" -p"$DB_PASSWORD" "$DB_DATABASE"
 ```
 
+## Logging
+
+The application includes comprehensive logging for both Laravel API and Express server.
+
+### Laravel Logging
+
+Use Laravel's Log facade in your PHP code:
+
+```php
+use Illuminate\Support\Facades\Log;
+
+// Different log levels
+Log::debug('Debug information', ['data' => $debugData]);
+Log::info('General information', ['user_id' => $userId]);
+Log::warning('Something unexpected happened', ['context' => $context]);
+Log::error('An error occurred', ['error' => $exception->getMessage()]);
+Log::critical('Critical system error', ['trace' => $exception->getTraceAsString()]);
+```
+
+### Viewing Logs
+
+```bash
+# Real-time logs from all services
+docker compose logs -f
+
+# Laravel API logs only
+docker compose logs api
+
+# Express server logs only
+docker compose logs app
+
+# Access Laravel log file directly
+docker compose exec api tail -f /var/www/html/storage/logs/laravel.log
+```
+
 ## Coding guidelines
 
 - Use arrow functions.
