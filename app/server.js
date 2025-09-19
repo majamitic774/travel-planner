@@ -25,36 +25,46 @@ application.use(helmet({
 // Logging middleware
 application.use(morgan('combined'));
 
-// Body parsing and cookie middleware
+// CSRF protection (skip for API routes since they're proxied)
+const csrfProtection = csrf({ cookie: true });
+
+// API proxy with error logging - MUST come before body parsing
+application.use(
+  "/api",
+  createProxyMiddleware({
+    target: apiOrigin,
+    changeOrigin: true,
+    ws: false,
+    logLevel: 'debug',
+    timeout: 30000,
+    proxyTimeout: 30000,
+    onError: (err, req, res) => {
+      console.error('[HPM][error]', err.code, req.method, req.url);
+      if (!res.headersSent) {
+        res.writeHead(502, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Proxy error' }));
+      }
+    },
+    onProxyReq: (proxyReq, req, res) => {
+      console.log('[HPM][proxyReq]', req.method, req.url, '->', apiOrigin + req.originalUrl);
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      console.log('[HPM][proxyRes]', proxyRes.statusCode, req.method, req.url);
+    }
+  })
+);
+
+// Body parsing and cookie middleware (AFTER proxy to avoid consuming body)
 application.use(express.json());
 application.use(express.urlencoded({ extended: false }));
 application.use(cookieParser());
 
-// CSRF protection (skip for API routes since they're proxied)
-const csrfProtection = csrf({ cookie: true });
 application.use((req, res, next) => {
   if (req.path.startsWith('/api')) {
     return next();
   }
   csrfProtection(req, res, next);
 });
-
-// API proxy with error logging
-application.use(
-  "/api",
-  createProxyMiddleware({
-    target: apiOrigin,
-    changeOrigin: true,
-    pathRewrite: { "^/api": "" },
-    onError: (err, req, res) => {
-      console.error('Proxy error:', err.message);
-      res.status(500).json({ error: 'Proxy error occurred' });
-    },
-    onProxyReq: (proxyReq, req, res) => {
-      console.log(`Proxying ${req.method} ${req.path} to ${apiOrigin}`);
-    }
-  })
-);
 
 application.use(express.static("public"));
 
