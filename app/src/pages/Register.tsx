@@ -1,13 +1,44 @@
 import React, { useState } from "react";
 
+import { post } from "../services/api";
+
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<{ message?: string; data?: unknown } | null>(null);
 
-  const handleSubmit = (formEvent: React.FormEvent): void => {
+  const handleSubmit = async (formEvent: React.FormEvent<HTMLFormElement>): Promise<void> => {
     formEvent.preventDefault();
+
+    if (password !== repeatPassword) {
+      setError("Passwords do not match.");
+
+      return;
+    }
+
+    setError(null);
+    setSuccess(null);
+    setIsSubmitting(true);
+
+    try {
+      const response = await post<{ message?: string; data?: unknown }>("register", {
+        username,
+        email,
+        password,
+      });
+
+      setSuccess(response);
+    } catch (requestError) {
+      const message = requestError instanceof Error ? requestError.message : "Unexpected error";
+
+      setError(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -42,8 +73,17 @@ const Register = () => {
           onChange={(formEvent) => setRepeatPassword(formEvent.target.value)}
           required
         />
-        <button type='submit'>Register</button>
+        <button type='submit' disabled={isSubmitting}>
+          {isSubmitting ? "Submitting..." : "Register"}
+        </button>
       </form>
+      {error && <p>{error}</p>}
+      {success && (
+        <div>
+          {success.message && <p>{success.message}</p>}
+          {success.data && <pre>{JSON.stringify(success.data, null, 2)}</pre>}
+        </div>
+      )}
     </div>
   );
 };

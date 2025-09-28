@@ -1,5 +1,6 @@
 <?php
 
-// API routes are intentionally empty.
-// Keep this file to add real endpoints later.
+use App\Http\Controllers\UsersController;
+use Illuminate\Support\Facades\Route;
 
+Route::post('/register', [UsersController::class, 'register']);
