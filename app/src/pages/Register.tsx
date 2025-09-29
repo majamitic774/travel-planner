@@ -9,9 +9,14 @@ const Register = () => {
   const [repeatPassword, setRepeatPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<{ message?: string; data?: unknown } | null>(null);
+  const [success, setSuccess] = useState<{
+    message?: string;
+    data?: unknown;
+  } | null>(null);
 
-  const handleSubmit = async (formEvent: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (
+    formEvent: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     formEvent.preventDefault();
 
     if (password !== repeatPassword) {
@@ -25,15 +30,22 @@ const Register = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await post<{ message?: string; data?: unknown }>("register", {
-        username,
-        email,
-        password,
-      });
+      const response = await post<{ message?: string; data?: unknown }>(
+        "register",
+        {
+          username,
+          email,
+          password,
+          password_confirmation: repeatPassword,
+        }
+      );
 
       setSuccess(response);
     } catch (requestError) {
-      const message = requestError instanceof Error ? requestError.message : "Unexpected error";
+      const message =
+        requestError instanceof Error
+          ? requestError.message
+          : "Unexpected error";
 
       setError(message);
     } finally {
@@ -78,12 +90,7 @@ const Register = () => {
         </button>
       </form>
       {error && <p>{error}</p>}
-      {success && (
-        <div>
-          {success.message && <p>{success.message}</p>}
-          {success.data && <pre>{JSON.stringify(success.data, null, 2)}</pre>}
-        </div>
-      )}
+      {success && <div>{success.message && <p>{success.message}</p>}</div>}
     </div>
   );
 };
