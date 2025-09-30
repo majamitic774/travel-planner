@@ -14,9 +14,10 @@ class UsersController extends Controller
         $validated = $request->validate([
             'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string',
+            'password' => 'required|string|confirmed',
         ]);
 
+    try {
         $user = User::create([
             'name' => $validated['username'],
             'email' => $validated['email'],
@@ -27,5 +28,12 @@ class UsersController extends Controller
             'message' => 'User registered successfully',
             'user' => $user,
         ], 201);
+
+        } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Registration failed',
+            'error' => $e->getMessage(),
+        ], 500);
+        }
     }
 }
