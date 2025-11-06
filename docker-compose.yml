@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   db:
@@ -8,7 +8,6 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
       - "3306:3306"
-
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
@@ -16,7 +15,7 @@ services:
       retries: 10
 
   api:
-    build: 
+    build:
       context: ./api
     user: "1000:1000"
     working_dir: /var/www/html
@@ -39,12 +38,12 @@ services:
       php artisan key:generate --force && \
       php artisan migrate --force && \
       php -S 0.0.0.0:8000 -t public public/index.php"
-    expose:
-      - "8000"
+    ports:
+      - "8000:8000"
 
   app:
     build:
-      context: ./app  
+      context: ./app
     user: "1000:1000"
     working_dir: /usr/src/app
     environment:

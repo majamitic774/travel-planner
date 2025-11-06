@@ -20,7 +20,7 @@ const Register = () => {
     formEvent.preventDefault();
 
     if (password !== repeatPassword) {
-      setError("Passwords do not match.");
+      setError("Password are not same.");
 
       return;
     }
