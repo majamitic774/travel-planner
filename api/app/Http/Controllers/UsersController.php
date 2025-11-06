@@ -35,4 +35,5 @@ class UsersController extends Controller
         ], 500);
         }
     }
-}
+
+  }
